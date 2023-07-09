@@ -1,0 +1,73 @@
+#!/bin/bash
+export PATH=/usr/bin:/usr/sbin:/bin:/sbin
+msg(){
+    echo -e "\033[32;1m$1\033[;0m"
+}
+
+########################choose from multiple hard drives#############################
+selectdisk=0
+createmenu=0
+disk="sdk"
+USBKEYS=($(
+                xargs -n1 readlink < <(echo /sys/block/*) |
+                sed -ne 's+^.*/usb[0-9].*/\([^/]*\)$+/sys/block/\1/device/uevent+p' |
+                xargs grep -H ^DRIVER=sd |
+                sed s/device.uevent.*$/size/ |
+                xargs grep -Hv ^0$ |
+                cut -d / -f 4                 ))
+#echo ${USBKEYS[@]}
+USBKEYS+=("sr0")
+for item in $(ls /sys/block/)
+do
+found="0"
+	for dev in ${USBKEYS[@]} ;do
+	#echo ${item}-${dev}
+		if [ "$item" == "$dev" ]
+        	then		
+			found="1"
+        	fi       	
+	done
+	
+	if [ "$found" == "0" ]
+        	then
+        		#disk+=("$item")
+        		disk[${#disk[@]}]="$item"
+        	fi        
+done
+usbKeyChoose() {
+
+i=1
+	if [ "$createmenu" == 0 ]
+	then
+		for dev in ${disk[@]} ;do
+		    #read model </sys/block/$dev/device/model 2>&1 > /dev/null
+		    menu+=("$i" "$dev $model")
+		    i=$[i + 1]
+		    createmenu=1
+		done
+        fi
+while choice=$(dialog --title "$TITLE" \
+                 --menu "Yuklenecek Diski Seciniz" 10 40 3 "${menu[@]}" \
+                 2>&1 >/dev/tty)
+    do
+    case $choice in
+        1) selectdisk=${menu[1]};break;;
+        2) selectdisk=${menu[3]};break;; # some action on 2
+        *) echo "Ooops - unknown choice $REPLY";;
+    esac
+done
+}
+if [ ${#disk[@]} == 1 ]
+then
+echo "Tek Sabit Diskiniz var: ${disk[0]}"
+selectdisk=${disk[0]}
+else
+echo "Birden Fazla Sabit Diskiniz Var"
+while [ $selectdisk == 0 ]
+do
+usbKeyChoose
+done
+clear # clear after user pressed Cancel
+fi
+echo "Sabit Diskiniz  $selectdisk"
+
