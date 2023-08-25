@@ -1,9 +1,9 @@
-Linux Modülü Nedir? Nasıl Yazılır ve Kullanılır?
+kmod Nedir? Nasıl Yazılır ve Kullanılır?
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 Linux çekirdeği ile donanım arasındaki haberleşmeyi sağlayan kod parçalarıdır. Bu kod parçalarını kernele eklediğimizde kerneli tekrardan derlememiz gerekmektedir. Her eklenen koddan sonra kernel derleme, kod çıkarttığımzda kernel derlemek ciddi bir iş yükü ve karmaşa yaratacaktır.
 
-Bu sorunların çözümü için modul vardır. moduller kernele istediğimiz kod parpalarını ekleme ya da çıkertma yapabiliyoruz. Bu işlemleri yaparken kenel derleme işlemi yapmamıza gerek yok.
+Bu sorunların çözümü için modul vardır. moduller kernele istediğimiz kod parpalarını ekleme ya da çıkartma yapabiliyoruz. Bu işlemleri yaparken kenel derleme işlemi yapmamıza gerek yok.
 
 Kernele modul yükleme kaldırma için kmod aracı kullanılmaktadır. kmaod aracı;
 

@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <sys/statvfs.h>
+#include <string_view>
+#include <optional>
+#include <cstring>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <sstream>
+
+std::optional<std::string> get_device_of_mount_point(std::string_view devicepath)
+{
+   std::ifstream mounts{"/proc/mounts"};
+   std::string device, mountpoint, type;
+   std::string line;
+
+
+if (mounts.is_open()) {
+    while (std::getline(mounts, line)) {
+    
+    std::istringstream iss(line);
+
+    getline(iss, device, ' ');
+    getline(iss, mountpoint, ' ');
+    getline(iss, type, ' ');
+	     if (device == devicepath)
+	     {
+	    	//std::cout << device << '|'<< mountpoint << '|'<< type<< std::endl;
+	    	return mountpoint;
+	     }
+    }
+    mounts.close();
+}
+
+  return std::nullopt;
+}
+
+
+int main(int argc, char **argv){
+ //get_device_of_mount_point("/dev/sdb1");
+if (const auto point = get_device_of_mount_point("/dev/sdb1"))
+   std::cout << *point << "\n";
+else
+   std::cout << "Not found\n";
+   
+    //struct statvfs fs_usage;
+    //statvfs(argv[1],&fs_usage);
+    //printf("%s:%f bytes available, %f bytes used\n",argv[1],
+     //           fs_usage.f_frsize*(double)fs_usage.f_bavail,
+    //            fs_usage.f_frsize * (double)(fs_usage.f_blocks - fs_usage.f_bfree));
+    return 0;
+}
