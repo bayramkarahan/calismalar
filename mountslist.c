@@ -39,7 +39,8 @@ if (mounts.is_open()) {
 void mountdevice()
 {
 system("mkdir /tmp/by");
-if (mount("/dev/sdb1", "/media/by", "vfat", MS_MGC_VAL | MS_RDONLY | MS_NOSUID, "")) {
+
+if (mount("/dev/sdb1", "/tmp/by", "dos", MS_MGC_VAL | MS_REMOUNT | MS_NOSUID, NULL)) {
     if (errno == EBUSY) {
         printf("Mountpoint busy");
     } else {
@@ -51,7 +52,7 @@ if (mount("/dev/sdb1", "/media/by", "vfat", MS_MGC_VAL | MS_RDONLY | MS_NOSUID, 
 }
 int main(int argc, char **argv){
 mountdevice();
-
+//mount("/dev/sdb1", "/tmp/by", "ntfs", MS_MGC_VAL | MS_REMOUNT, "");
 /* //get_device_of_mount_point("/dev/sdb1");
 if (const auto point = get_device_of_mount_point("/dev/sdb1"))
    std::cout << *point << "\n";

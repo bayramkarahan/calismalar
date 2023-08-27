@@ -7,7 +7,7 @@ int main()
 {
    const char* src  = "/dev/sdb1";
    const char* trgt = "/tmp/by";
-   const char* type = "tmpfs";
+   const char* type = "dos";
    const unsigned long mntflags = 0;
    const char* opts = "mode=0700,uid=65534";   /* 65534 is the uid of nobody */
 

@@ -172,6 +172,26 @@ if (file.is_open()) {
   return "";
 }
 /******************************************************************************************/
+/*************************************get_umountdisk_command cmp**************************************/
+std::string get_umountdisk_command()
+{
+
+   std::ifstream file("/usr/share/usbKeyCreater/command.conf");
+    std::string line;
+
+
+if (file.is_open()) {
+    while (std::getline(file, line)) {
+    
+    	    	return line;
+
+    }
+    file.close();
+}
+
+  return "";
+}
+/******************************************************************************************/
 /****************************************md5sum********************************************/
 char *str2md5(const char *str, int length) {
     int n;
@@ -243,75 +263,83 @@ int main(){
                 printf("   Action: %s\n", udev_device_get_action(dev));
                 ///cout << udev_get_run_path (dev) << endl;
 
-                if( strcmp(udev_device_get_action(dev),"add")==0 && strcmp(udev_device_get_devtype(dev),"partition")==0) 
+                if( strcmp(udev_device_get_action(dev),"add")==0 && strcmp(udev_device_get_devtype(dev),"partition")==0)
                 {
-                disk_add_drm=true;
-                cout << "conectat" << endl;
-                //tmp/addusb
-                system("mkdir /media/usbkeydisk");
-                std::string komut="mount ";
- 		komut.append(udev_device_get_devnode(dev));
- 		komut.append(" /media/usbkeydisk");
- 		
- 		printf("komut: %s",komut.c_str());
- 		//std::cout <<"komut:"<<komut<< "\n";
- 		system(komut.c_str());
-		
-                } 
-                if( strcmp(udev_device_get_action(dev),"remove")==0 ) 
+                    disk_add_drm=true;
+                    cout << "conectat" << endl;
+                    //tmp/addusb
+                    system("umount /media/usbkeydisk");
+
+                    system("mkdir /media/usbkeydisk");
+                    std::string komut="mount ";
+                    komut.append(udev_device_get_devnode(dev));
+                    komut.append(" /media/usbkeydisk");
+
+                    //printf("komut: %s",komut.c_str());
+                    //std::cout <<"komut:"<<komut<< "\n";
+                    system(komut.c_str());
+                    printf("disk bağlandı..");
+                }
+                if( strcmp(udev_device_get_action(dev),"remove")==0 )
                 {
-                disk_remove_drm=true;
-                  auto sserial=udev_device_get_property_value(dev, "ID_SERIAL_SHORT");
-                	//login olunmuş ve login olan disk ile çıkartılan disk aynıysa logout yap
-		        if(sserial==login_serial&&login_status)
-		        {
-		        login_serial="";
-		        login_status=false;
-		        	printf("oturum açılan disk çıkartıldı");
-		        	system("umount /media/usbkeydisk");
-		        	system("loginctl terminate-seat seat0");
-		        	
-		        }
-		   
-                } 
-                 /********************************disk bağlandımı*****************************/
-                 if( strcmp(udev_device_get_action(dev),"add")==0&&(disk_add_drm==true&&login_status==false) ) 
+                    disk_remove_drm=true;
+                    auto sserial=udev_device_get_property_value(dev, "ID_SERIAL_SHORT");
+                    //login olunmuş ve login olan disk ile çıkartılan disk aynıysa logout yap
+                   	std::string kmt="umount ";
+                        kmt.append(udev_device_get_devnode(dev));
+                        system(kmt.c_str());
+                        //system("systemctl restart usb-mount.service|true"); 
+                      if(sserial==login_serial&&login_status)
+                    {       
+                        login_serial="";
+                        login_status=false;
+                        disk_add_drm=false;         
+                        printf("oturum açılan disk umount yapıldı");
+                        //usb disk çıkartıldığında çalışacak komut çalıştırılıyor...        
+			//system("loginctl terminate-seat seat0");
+			system(get_umountdisk_command().c_str());
+			
+                    }
+
+                }
+                /********************************disk bağlandımı*****************************/
+                if( strcmp(udev_device_get_action(dev),"add")==0&&(disk_add_drm==true&&login_status==false) )
                 {
-                disk_add_drm=false;
-                auto sserial=udev_device_get_property_value(dev, "ID_SERIAL_SHORT");   
-                /********************************md5*****************************************************/
-			 auto md5kod = str2md5(sserial, strlen(sserial));
-		/******************************************disk bağlantı noktası öğrenme erişme kod kontrolü**************/
-                if (const auto point = get_device_of_mount_point(udev_device_get_devnode(dev)))
-  		 {
-  		// std::cout << *point << "\n";
-  		bool durum=exist_md5(*point,md5kod);//disk içindeki md5 kontrol ediliyor
-	  		//durum==true dosya var ve md5 doğruysa login yap
-	  		if(durum)
-	  		{
-	  			login_status=true;
- 				login_serial=sserial;
- 				std::string qrpsw=get_qrpsw();
- 				//std::cout <<"login yapılabilir disk uygun"<<qrpsw<< "\n";
- 				std::string komut="/usr/bin/sshlogin ebaqr ";
- 				komut.append(qrpsw);
- 				//printf("komut: %s",komut.c_str());
- 				//std::cout <<"komut:"<<komut<< "\n";
- 				system(komut.c_str());
- 				//system("ln -s /media/usbkeydisk /ortak-alan");
-				
-	  		}
- 		 }
-               /****************************************************************************************************/
-                
-                
-                } 
+                    disk_add_drm=false;
+                    auto sserial=udev_device_get_property_value(dev, "ID_SERIAL_SHORT");
+                    /********************************md5*****************************************************/
+                    auto md5kod = str2md5(sserial, strlen(sserial));
+                    /******************************************disk bağlantı noktası öğrenme erişme kod kontrolü**************/
+                    if (const auto point = get_device_of_mount_point(udev_device_get_devnode(dev)))
+                    {
+                        // std::cout << *point << "\n";
+                        bool durum=exist_md5(*point,md5kod);//disk içindeki md5 kontrol ediliyor
+                        //durum==true dosya var ve md5 doğruysa login yap
+                        if(durum)
+                        {
+                            login_status=true;
+                            login_serial=sserial;
+                            std::string qrpsw=get_qrpsw();
+                            //std::cout <<"login yapılabilir disk uygun"<<qrpsw<< "\n";
+                            std::string komut="/usr/bin/sshlogin ebaqr ";
+                            komut.append(qrpsw);
+                            //printf("komut: %s",komut.c_str());
+                            //std::cout <<"komut:"<<komut<< "\n";
+                            system(komut.c_str());
+                            //system("ln -s /media/usbkeydisk /ortak-alan");
+
+                        }
+                    }
+                    /****************************************************************************************************/
+
+
+                }
                 
                 udev_device_unref(dev);
             }
             else {
                 printf("No Device from receive_device(). An error occured.\n");
-            }                   
+            }
         }
         usleep(250*1000);
         fflush(stdout);
@@ -320,6 +348,6 @@ int main(){
 
 
 
-  udev_unref(udev);
-  return 0;
+    udev_unref(udev);
+    return 0;
 }
