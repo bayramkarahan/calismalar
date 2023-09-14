@@ -12,6 +12,8 @@
 #include <shadow.h>
 #include <sys/time.h>
 #include <errno.h>
+#include <grp.h>
+
 
 //g++ -o user user.c -lcrypt
 using namespace std;
@@ -222,6 +224,209 @@ void user_add(user_t *o, char *username, volatile char *passwd)
 }
 // }}}
 
+// {{{ user_add()
+/// Create a valid user account
+void group_add(user_t *o, char *groupname)
+{
+
+   o->error[0]=0;
+
+   struct group p;
+   struct group *pw;
+   struct spwd sp;
+   FILE *f; 
+   int min = 1000;
+   int max = 65000;
+   char home[256];
+
+   snprintf(home, sizeof(home), "/home/%s", username);
+
+   p.pw_name = (char *)username;
+   p.pw_passwd = "x";
+   p.pw_uid = USER_DEFAULT_ID;
+   p.pw_gid = USER_GROUP_ID;
+   p.pw_gecos = "OpenDomo User";
+   p.pw_dir = home;
+   p.pw_shell = "/bin/bash";
+
+
+   f = fopen("/etc/passwd", "r");
+
+   /* check user and get valid id */
+   while ((pw = fgetpwent(f))) 
+   {
+      if (strcmp(pw->pw_name, p.pw_name) == 0) 
+      {
+      //	printf("user_add(): user exists\n");
+         sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
+         return;
+      }
+
+      if ((pw->pw_uid >= p.pw_uid) && (pw->pw_uid < max)
+            && (pw->pw_uid >= min)) 
+      {
+         p.pw_uid = pw->pw_uid + 1;
+      }
+   }
+
+   fclose(f);
+
+   f = fopen("/etc/passwd", "a+");
+   if(!f)
+   {
+      sstrncpy(o->error, "user_add(): cannot open /etc/passwd",USER_ERROR_SIZE);
+      return;
+   }
+
+
+   /* add to passwd */
+   if (putpwent(&p, f) == -1) 
+   {
+      sstrncpy(o->error, "user_add(): putpwent() error", USER_ERROR_SIZE);
+      return;
+   }
+
+   fclose(f);
+
+
+   /* salt */
+   struct timeval tv;
+   static char salt[40];
+
+   salt[0] = '\0';
+
+   gettimeofday (&tv, (struct timezone *) 0);
+   strcat(salt, l64a (tv.tv_usec));
+   strcat(salt, l64a (tv.tv_sec + getpid () + clock ()));
+
+   if (strlen (salt) > 3 + 8)  
+      salt[11] = '\0';
+
+
+   /* shadow */
+   sp.sp_namp = p.pw_name;
+   sp.sp_pwdp = (char*)crypt((const char*)passwd, salt);
+   sp.sp_min = 0;
+   sp.sp_max = (10000L * DAY) / SCALE;
+   sp.sp_lstchg = time((time_t *) 0) / SCALE;
+   sp.sp_warn = -1;
+   sp.sp_expire = -1;
+   sp.sp_inact = -1;
+   sp.sp_flag = -1;
+
+
+   /* add to shadow */
+   f = fopen("/etc/shadow", "a+");
+   if(!f)
+   {
+      sstrncpy(o->error, "user_add(): cannot open /etc/shadow",USER_ERROR_SIZE);
+      return;
+   }
+
+   if (putspent(&sp, f) == -1) 
+   {
+      sstrncpy(o->error, "user_add(): putspent() error",USER_ERROR_SIZE);
+      return;
+   }
+
+   fclose(f);
+
+   /* Create home */
+   mkdir(home, 0700);  
+   chown(home, p.pw_uid, USER_GROUP_ID);
+}
+// }}}
+
+// {{{ user_get_new_id()
+/// Create a valid user account
+int user_get_new_id(user_t *o, char *username)
+{
+
+   o->error[0]=0;
+
+   struct passwd p;
+   struct passwd *pw;
+   struct spwd sp;
+   FILE *f; 
+   int min = 1000;
+   int max = 65000;
+   char home[256];
+
+   snprintf(home, sizeof(home), "/home/%s", username);
+
+   p.pw_name = (char *)username;
+   p.pw_passwd = "x";
+   p.pw_uid = USER_DEFAULT_ID;
+   p.pw_gid = USER_GROUP_ID;
+   
+   f = fopen("/etc/passwd", "r");
+   /* check user and get valid id */
+   while ((pw = fgetpwent(f))) 
+   {
+      if (strcmp(pw->pw_name, p.pw_name) == 0) 
+      {
+      //	printf("user_add(): user exists\n");
+         sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
+         return 0;
+      }
+
+      if ((pw->pw_uid >= p.pw_uid) && (pw->pw_uid < max)
+            && (pw->pw_uid >= min)) 
+      {
+         p.pw_uid = pw->pw_uid + 1;
+      }
+   }
+
+   fclose(f);
+return p.pw_uid;
+   }
+   
+   // {{{ group_get_new_id()
+/// Create a valid user account
+int group_get_new_id(user_t *o, char *groupname)
+{
+
+   o->error[0]=0;
+
+   struct group p;
+   struct group *pw;
+   struct spwd sp;
+   FILE *f; 
+   int min = 1000;
+   int max = 65000;
+   char home[256];
+
+  
+   p.gr_name = (char *)groupname;
+   p.gr_passwd = "x";
+  // p.gr_uid = USER_DEFAULT_ID;
+   p.gr_gid = USER_GROUP_ID;
+   
+   f = fopen("/etc/group", "r");
+   /* check user and get valid id */
+   while ((pw = fgetgrent(f))) 
+   {
+     /* if (strcmp(pw->pw_name, p.pw_name) == 0) 
+      {
+      //	printf("user_add(): user exists\n");
+         sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
+         return 0;
+      }
+      */
+	//printf("%i\n",pw->gr_gid);
+
+      if ((pw->gr_gid >= p.gr_gid) && (pw->gr_gid < max)
+            && (pw->gr_gid >= min)) 
+      {
+         p.gr_gid = pw->gr_gid + 1;
+      }
+   }
+
+   fclose(f);
+return p.gr_gid;
+   }
+// }}}
+
 // {{{ user_del()
 /** Delete specified user
  @param o User structure
@@ -325,12 +530,17 @@ int main() {
     user_t err;
     char* cpass = const_cast<char*>(pass.c_str());
     char* cusername = const_cast<char*>(username.c_str());
- 
+    
+int a=user_get_new_id(&err,"bb");
+//printf("yeni kullanıcı id: %i",a);
+
+int b=group_get_new_id(&err,"bb");
+printf("yeni grup id: %i",b);
 //user_add(&err,cusername,cpass);
 //void user_set_password(user_t *o, char *username, volatile char* passwd)
 //user_set_password(&err,cusername,const_cast<char*>("6"));
 //void user_del(user_t *o, char *username)
-user_del(&err,cusername);
+//user_del(&err,cusername);
 printf(err.error);
 
   
