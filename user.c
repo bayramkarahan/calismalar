@@ -226,8 +226,9 @@ void user_add(user_t *o, char *username, volatile char *passwd)
 
 // {{{ user_add()
 /// Create a valid user account
-void group_add(user_t *o, char *groupname)
+void group_add(user_t *o, char *groupname, int gid)
 {
+USER_GROUP_ID=gid;
 
    o->error[0]=0;
 
@@ -239,39 +240,39 @@ void group_add(user_t *o, char *groupname)
    int max = 65000;
    char home[256];
 
-   snprintf(home, sizeof(home), "/home/%s", username);
+   snprintf(home, sizeof(home), "/home/%s", groupname);
 
-   p.pw_name = (char *)username;
-   p.pw_passwd = "x";
-   p.pw_uid = USER_DEFAULT_ID;
-   p.pw_gid = USER_GROUP_ID;
-   p.pw_gecos = "OpenDomo User";
-   p.pw_dir = home;
-   p.pw_shell = "/bin/bash";
+   p.gr_name = (char *)groupname;
+   p.gr_passwd = "x";
+  // p.gr_uid = USER_DEFAULT_ID;
+   p.gr_gid = USER_GROUP_ID;
+  // p.pw_gecos = "OpenDomo User";
+ //  p.pw_dir = home;
+  // p.pw_shell = "/bin/bash";
 
 
-   f = fopen("/etc/passwd", "r");
+   f = fopen("/etc/group", "r");
 
    /* check user and get valid id */
-   while ((pw = fgetpwent(f))) 
+   while ((pw = fgetgrent(f))) 
    {
-      if (strcmp(pw->pw_name, p.pw_name) == 0) 
+      if (strcmp(pw->gr_name, p.gr_name) == 0) 
       {
       //	printf("user_add(): user exists\n");
          sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
          return;
       }
 
-      if ((pw->pw_uid >= p.pw_uid) && (pw->pw_uid < max)
-            && (pw->pw_uid >= min)) 
+      if ((pw->gr_gid >= p.gr_gid) && (pw->gr_gid < max)
+            && (pw->gr_gid >= min)) 
       {
-         p.pw_uid = pw->pw_uid + 1;
+         p.gr_gid = pw->gr_gid + 1;
       }
    }
 
    fclose(f);
 
-   f = fopen("/etc/passwd", "a+");
+   f = fopen("/etc/group", "a+");
    if(!f)
    {
       sstrncpy(o->error, "user_add(): cannot open /etc/passwd",USER_ERROR_SIZE);
@@ -280,7 +281,7 @@ void group_add(user_t *o, char *groupname)
 
 
    /* add to passwd */
-   if (putpwent(&p, f) == -1) 
+   if (putgrent(&p, f) == -1) 
    {
       sstrncpy(o->error, "user_add(): putpwent() error", USER_ERROR_SIZE);
       return;
@@ -290,7 +291,7 @@ void group_add(user_t *o, char *groupname)
 
 
    /* salt */
-   struct timeval tv;
+  /* struct timeval tv;
    static char salt[40];
 
    salt[0] = '\0';
@@ -304,7 +305,7 @@ void group_add(user_t *o, char *groupname)
 
 
    /* shadow */
-   sp.sp_namp = p.pw_name;
+  /* sp.sp_namp = p.pw_name;
    sp.sp_pwdp = (char*)crypt((const char*)passwd, salt);
    sp.sp_min = 0;
    sp.sp_max = (10000L * DAY) / SCALE;
@@ -313,10 +314,10 @@ void group_add(user_t *o, char *groupname)
    sp.sp_expire = -1;
    sp.sp_inact = -1;
    sp.sp_flag = -1;
-
+*/
 
    /* add to shadow */
-   f = fopen("/etc/shadow", "a+");
+  /* f = fopen("/etc/shadow", "a+");
    if(!f)
    {
       sstrncpy(o->error, "user_add(): cannot open /etc/shadow",USER_ERROR_SIZE);
@@ -328,12 +329,12 @@ void group_add(user_t *o, char *groupname)
       sstrncpy(o->error, "user_add(): putspent() error",USER_ERROR_SIZE);
       return;
    }
-
-   fclose(f);
+*/
+ //  fclose(f);
 
    /* Create home */
-   mkdir(home, 0700);  
-   chown(home, p.pw_uid, USER_GROUP_ID);
+  // mkdir(home, 0700);  
+   //chown(home, p.pw_uid, USER_GROUP_ID);
 }
 // }}}
 
@@ -536,6 +537,8 @@ int a=user_get_new_id(&err,"bb");
 
 int b=group_get_new_id(&err,"bb");
 printf("yeni grup id: %i",b);
+group_add(&err,"hehe",b);
+
 //user_add(&err,cusername,cpass);
 //void user_set_password(user_t *o, char *username, volatile char* passwd)
 //user_set_password(&err,cusername,const_cast<char*>("6"));
