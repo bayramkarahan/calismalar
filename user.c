@@ -28,12 +28,16 @@ using namespace std;
 #define WEEK (7*DAY)
 /// Time scale used
 #define SCALE DAY
+#define _GNU_SOURCE
+       #include <grp.h>
 
+       int putgrent(const struct group *grp, FILE *fp);
+       
 typedef struct
 {
    char error[USER_ERROR_SIZE];
 }
-user_t;
+message;
 void sstrncpy(char *dst, const char *src, size_t size)
 {
    size_t len = size;
@@ -113,7 +117,7 @@ int user_del_line(const char *username, const char* filename)
 
 // {{{ user_add()
 /// Create a valid user account
-void user_add(user_t *o, char *username, volatile char *passwd)
+void user_add(message *o, char *username, volatile char *passwd)
 {
 
    o->error[0]=0;
@@ -226,121 +230,62 @@ void user_add(user_t *o, char *username, volatile char *passwd)
 
 // {{{ user_add()
 /// Create a valid user account
-void group_add(user_t *o, char *groupname, int gid)
+int group_add(message *o, char *groupname, char **gmem)
 {
-USER_GROUP_ID=gid;
-
    o->error[0]=0;
-
-   struct group p;
-   struct group *pw;
-   struct spwd sp;
+   struct group g;
+   struct group *gr;
    FILE *f; 
-   int min = 1000;
+   int min = 100;
    int max = 65000;
-   char home[256];
-
-   snprintf(home, sizeof(home), "/home/%s", groupname);
-
-   p.gr_name = (char *)groupname;
-   p.gr_passwd = "x";
-  // p.gr_uid = USER_DEFAULT_ID;
-   p.gr_gid = USER_GROUP_ID;
-  // p.pw_gecos = "OpenDomo User";
- //  p.pw_dir = home;
-  // p.pw_shell = "/bin/bash";
-
-
+   g.gr_name = (char *)groupname;
+   g.gr_gid = USER_GROUP_ID;
+   g.gr_mem=gmem; // array of group members
+   g.gr_passwd = "x";
+    /**************************************************************************/
    f = fopen("/etc/group", "r");
-
-   /* check user and get valid id */
-   while ((pw = fgetgrent(f))) 
+   /* check group and get valid id */
+   while ((gr = fgetgrent(f)))
    {
-      if (strcmp(pw->gr_name, p.gr_name) == 0) 
+      if (strcmp(gr->gr_name, g.gr_name) == 0)
       {
-      //	printf("user_add(): user exists\n");
-         sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
-         return;
+         sstrncpy(o->error, "group_add(): group exists\n", USER_ERROR_SIZE);
+         return -1;
       }
 
-      if ((pw->gr_gid >= p.gr_gid) && (pw->gr_gid < max)
-            && (pw->gr_gid >= min)) 
+      if ((gr->gr_gid >= g.gr_gid) && gr->gr_gid < max
+            && (gr->gr_gid >= min))
       {
-         p.gr_gid = pw->gr_gid + 1;
+         g.gr_gid = gr->gr_gid + 1;
       }
    }
 
    fclose(f);
 
+    /**************************************************************************/
    f = fopen("/etc/group", "a+");
    if(!f)
    {
-      sstrncpy(o->error, "user_add(): cannot open /etc/passwd",USER_ERROR_SIZE);
-      return;
+      sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
+      return -1;
    }
 
-
-   /* add to passwd */
-   if (putgrent(&p, f) == -1) 
+   /* add to group */
+   int st=putgrent(&g, f);
+   if (st == -1) 
    {
-      sstrncpy(o->error, "user_add(): putpwent() error", USER_ERROR_SIZE);
-      return;
-   }
 
+      sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
+      return -1;
+   }
    fclose(f);
-
-
-   /* salt */
-  /* struct timeval tv;
-   static char salt[40];
-
-   salt[0] = '\0';
-
-   gettimeofday (&tv, (struct timezone *) 0);
-   strcat(salt, l64a (tv.tv_usec));
-   strcat(salt, l64a (tv.tv_sec + getpid () + clock ()));
-
-   if (strlen (salt) > 3 + 8)  
-      salt[11] = '\0';
-
-
-   /* shadow */
-  /* sp.sp_namp = p.pw_name;
-   sp.sp_pwdp = (char*)crypt((const char*)passwd, salt);
-   sp.sp_min = 0;
-   sp.sp_max = (10000L * DAY) / SCALE;
-   sp.sp_lstchg = time((time_t *) 0) / SCALE;
-   sp.sp_warn = -1;
-   sp.sp_expire = -1;
-   sp.sp_inact = -1;
-   sp.sp_flag = -1;
-*/
-
-   /* add to shadow */
-  /* f = fopen("/etc/shadow", "a+");
-   if(!f)
-   {
-      sstrncpy(o->error, "user_add(): cannot open /etc/shadow",USER_ERROR_SIZE);
-      return;
-   }
-
-   if (putspent(&sp, f) == -1) 
-   {
-      sstrncpy(o->error, "user_add(): putspent() error",USER_ERROR_SIZE);
-      return;
-   }
-*/
- //  fclose(f);
-
-   /* Create home */
-  // mkdir(home, 0700);  
-   //chown(home, p.pw_uid, USER_GROUP_ID);
+   return g.gr_gid;
 }
 // }}}
 
 // {{{ user_get_new_id()
 /// Create a valid user account
-int user_get_new_id(user_t *o, char *username)
+int user_get_new_id(message *o, char *username)
 {
 
    o->error[0]=0;
@@ -384,36 +329,22 @@ return p.pw_uid;
    
    // {{{ group_get_new_id()
 /// Create a valid user account
-int group_get_new_id(user_t *o, char *groupname)
+int group_get_new_id(message *o, char *groupname)
 {
-
    o->error[0]=0;
-
    struct group p;
    struct group *pw;
    struct spwd sp;
    FILE *f; 
    int min = 1000;
    int max = 65000;
-   char home[256];
-
-  
    p.gr_name = (char *)groupname;
-   p.gr_passwd = "x";
-  // p.gr_uid = USER_DEFAULT_ID;
    p.gr_gid = USER_GROUP_ID;
-   
    f = fopen("/etc/group", "r");
    /* check user and get valid id */
    while ((pw = fgetgrent(f))) 
    {
-     /* if (strcmp(pw->pw_name, p.pw_name) == 0) 
-      {
-      //	printf("user_add(): user exists\n");
-         sstrncpy(o->error, "user_add(): user exists", USER_ERROR_SIZE);
-         return 0;
-      }
-      */
+
 	//printf("%i\n",pw->gr_gid);
 
       if ((pw->gr_gid >= p.gr_gid) && (pw->gr_gid < max)
@@ -433,7 +364,7 @@ return p.gr_gid;
  @param o User structure
  @param username User name to be deleted
  */
-void user_del(user_t *o, char *username)
+void user_del(message *o, char *username)
 {
    /// @todo: warning! final state may be inconsistent
 
@@ -462,7 +393,7 @@ char home[256];
 
 // {{{ user_set_password()
 /// Set the password for the specified username
-void user_set_password(user_t *o, char *username, volatile char* passwd)
+void user_set_password(message *o, char *username, volatile char* passwd)
 {
    FILE *f;
    struct spwd *sp = NULL;
@@ -526,18 +457,18 @@ void user_set_password(user_t *o, char *username, volatile char* passwd)
 
 
 int main() {
-    string username = "bb";
-    std::string pass = "3";
-    user_t err;
-    char* cpass = const_cast<char*>(pass.c_str());
-    char* cusername = const_cast<char*>(username.c_str());
+    //string username = "bb";
+    //std::string pass = "3";
+    message err;
+   // char* cpass = const_cast<char*>(pass.c_str());
+   // char* cusername = const_cast<char*>(username.c_str());
     
-int a=user_get_new_id(&err,"bb");
+//int a=user_get_new_id(&err,"bb");
 //printf("yeni kullanıcı id: %i",a);
 
-int b=group_get_new_id(&err,"bb");
-printf("yeni grup id: %i",b);
-group_add(&err,"hehe",b);
+int b=group_add(&err,"gehe",{NULL});
+printf("yeni group id: %i\n",b);
+
 
 //user_add(&err,cusername,cpass);
 //void user_set_password(user_t *o, char *username, volatile char* passwd)
