@@ -115,6 +115,67 @@ int user_del_line(const char *username, const char* filename)
 }
 // }}}
 
+// {{{ group_del_line()
+/// Delete the group's line in the specified file (group)
+int group_del_line(const char *groupname, const char* filename)
+{
+    char *buffer;
+    FILE *group;
+    size_t len;
+    int begin;
+    int end;
+    char needle[256];
+    char *start;
+    char *stop;
+    struct stat statbuf;
+
+    group = fopen(filename, "r");
+    if (!group)
+        return -1;
+
+    stat(filename, &statbuf);
+    len = statbuf.st_size;
+    buffer = (char *) malloc(len * sizeof(char));
+
+    if (!buffer)
+    {
+        fclose(group);
+        return -1;
+    }
+
+   fread(buffer, len, sizeof(char), group);
+
+    fclose(group);
+
+    snprintf(needle, 256, "\n%s:", groupname);
+    needle[255] = 0;
+    start = strstr(buffer, needle);
+
+    if (!start)
+    {
+        begin = 0;
+        end = 0;
+    }
+    else
+    {
+        start++;
+        stop = strchr(start, '\n');
+        begin = start - buffer;
+        end = stop - buffer;
+    }
+
+    group = fopen(filename, "w");
+    if (!group)
+        return -1;
+
+    fwrite(buffer, (begin - 1), sizeof(char), group);
+    fwrite(&buffer[end], (len - end), sizeof(char), group);
+
+    fclose(group);
+    return 0;
+}
+// }}}
+
 // {{{ user_add()
 /// Create a valid user account
 void user_add(message *o, char *username, volatile char *passwd)
@@ -227,9 +288,137 @@ void user_add(message *o, char *username, volatile char *passwd)
    chown(home, p.pw_uid, USER_GROUP_ID);
 }
 // }}}
+// {{{ user_set_uid()
+/// Create a valid user_set_uid account
+int user_get_uid(message *o, char *username)
+{
 
-// {{{ user_add()
-/// Create a valid user account
+    struct passwd *pwd;
+
+    pwd = getpwnam(username);
+    if (pwd == NULL) {
+        printf("Not found user\n");
+        return -1;
+    }
+return pwd->pw_uid;
+}
+// }}}
+
+// {{{ user_set_uid()
+/// Create a valid user_set_uid account
+void user_set_uid(message *o, char *username,int new_uid)
+{
+
+    struct passwd *pwd;
+
+    pwd = getpwnam(username);
+    if (pwd == NULL) {
+        printf("Failed to get uid\n");
+    }
+
+
+    /****************************************************/
+    /// @todo: warning! final state may be inconsistent
+     if(user_del_line(username, "/etc/passwd")!=0)
+    {
+       sstrncpy(o->error, "user_del() can not remove user from /etc/passwd",
+          USER_ERROR_SIZE);
+       return;
+    }
+
+    /***********************set operation***************************/
+      pwd->pw_uid=new_uid;
+      /****************************************************/
+
+   o->error[0]=0;
+      FILE *f;
+
+   f = fopen("/etc/passwd", "a+");
+   if(!f)
+   {
+      sstrncpy(o->error, "user_add(): cannot open /etc/passwd",USER_ERROR_SIZE);
+      return;
+   }
+
+
+   /* add to passwd */
+   if (putpwent(pwd, f) == -1)
+   {
+      sstrncpy(o->error, "user_add(): putpwent() error", USER_ERROR_SIZE);
+      return;
+   }
+
+   fclose(f);
+
+}
+// }}}
+
+// {{{ user_set_uid()
+/// Create a valid user_set_uid account
+void group_add_user(message *o, char *username,char **grouplist)
+{
+    size_t n = sizeof( grouplist ) / sizeof( *grouplist );
+//int size = sizeof(grouplist) / sizeof(grouplist[0]);
+    for(int i=0;i<n;i++)
+    {
+    printf("liste- %i : %s",i,grouplist[i]);
+    }
+  /*  struct group *grp;
+
+    grp = getgrnam(groupname);
+    if (grp == NULL) {
+        printf("Failed to get gid\n");
+        return;
+    }
+
+
+    /****************************************************/
+  /*  /// @todo: warning! final state may be inconsistent
+     if(group_del_line(groupname, "/etc/group")!=0)
+    {
+       sstrncpy(o->error, "user_del() can not remove user from /etc/group",
+          USER_ERROR_SIZE);
+       return;
+    }
+
+    /***********************set operation***************************/
+  //   grp->gr_mem=gmem;
+      /****************************************************/
+
+ /*  o->error[0]=0;
+      FILE *f;
+
+   f = fopen("/etc/group", "a+");
+   if(!f)
+   {
+      sstrncpy(o->error, "group_add(): cannot open /etc/group",USER_ERROR_SIZE);
+      return;
+   }
+
+   /**************************************************************************/
+ /* f = fopen("/etc/group", "a+");
+  if(!f)
+  {
+     sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
+     return;
+  }
+
+  /* add to group */
+ /* int st=putgrent(grp, f);
+  if (st == -1)
+  {
+
+     sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
+     return;
+  }
+  fclose(f);
+  */
+
+}
+// }}}
+
+// {{{ user_set_uid()
+/// Create a valid group account
 int group_add(message *o, char *groupname, char **gmem)
 {
    o->error[0]=0;
@@ -262,23 +451,24 @@ int group_add(message *o, char *groupname, char **gmem)
 
    fclose(f);
 
-    /**************************************************************************/
-   f = fopen("/etc/group", "a+");
-   if(!f)
-   {
-      sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
-      return -1;
-   }
+   /**************************************************************************/
+  f = fopen("/etc/group", "a+");
+  if(!f)
+  {
+     sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
+     return -1;
+  }
 
-   /* add to group */
-   int st=putgrent(&g, f);
-   if (st == -1) 
-   {
+  /* add to group */
+  int st=putgrent(&g, f);
+  if (st == -1)
+  {
 
-      sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
-      return -1;
-   }
-   fclose(f);
+     sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
+     return -1;
+  }
+  fclose(f);
+  /**************************************************************************/
    return g.gr_gid;
 }
 // }}}
@@ -462,12 +652,16 @@ int main() {
     message err;
    // char* cpass = const_cast<char*>(pass.c_str());
    // char* cusername = const_cast<char*>(username.c_str());
-    
+     char *members[] = {"user1", "user2", "user3", NULL};
+    group_add_user(&err,"tehe",members);
 //int a=user_get_new_id(&err,"bb");
 //printf("yeni kullanıcı id: %i",a);
+//user_set_uid(&err,"karahan",5000);
+//int uid=user_get_uid(&err,"karahan");
+//printf("Bulunan user id: %i\n",uid);
 
-int b=group_add(&err,"gehe",{NULL});
-printf("yeni group id: %i\n",b);
+//int b=group_add(&err,"gehe",{NULL});
+//printf("yeni group id: %i\n",b);
 
 
 //user_add(&err,cusername,cpass);
