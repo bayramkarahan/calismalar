@@ -353,69 +353,6 @@ void user_set_uid(message *o, char *username,int new_uid)
 }
 // }}}
 
-// {{{ user_set_uid()
-/// Create a valid user_set_uid account
-void group_add_user(message *o, char *username,char **grouplist)
-{
-    size_t n = sizeof( grouplist ) / sizeof( *grouplist );
-//int size = sizeof(grouplist) / sizeof(grouplist[0]);
-    for(int i=0;i<n;i++)
-    {
-    printf("liste- %i : %s",i,grouplist[i]);
-    }
-  /*  struct group *grp;
-
-    grp = getgrnam(groupname);
-    if (grp == NULL) {
-        printf("Failed to get gid\n");
-        return;
-    }
-
-
-    /****************************************************/
-  /*  /// @todo: warning! final state may be inconsistent
-     if(group_del_line(groupname, "/etc/group")!=0)
-    {
-       sstrncpy(o->error, "user_del() can not remove user from /etc/group",
-          USER_ERROR_SIZE);
-       return;
-    }
-
-    /***********************set operation***************************/
-  //   grp->gr_mem=gmem;
-      /****************************************************/
-
- /*  o->error[0]=0;
-      FILE *f;
-
-   f = fopen("/etc/group", "a+");
-   if(!f)
-   {
-      sstrncpy(o->error, "group_add(): cannot open /etc/group",USER_ERROR_SIZE);
-      return;
-   }
-
-   /**************************************************************************/
- /* f = fopen("/etc/group", "a+");
-  if(!f)
-  {
-     sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
-     return;
-  }
-
-  /* add to group */
- /* int st=putgrent(grp, f);
-  if (st == -1)
-  {
-
-     sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
-     return;
-  }
-  fclose(f);
-  */
-
-}
-// }}}
 
 // {{{ user_set_uid()
 /// Create a valid group account
@@ -470,6 +407,112 @@ int group_add(message *o, char *groupname, char **gmem)
   fclose(f);
   /**************************************************************************/
    return g.gr_gid;
+}
+// }}}
+
+// {{{ user_set_uid()
+/// Create a valid user_set_uid account
+void group_add_user(message *o, char *username,char *grouplist[],int uz)
+{
+   // int uz = sizeof(members) / sizeof(members[0]);
+    for(int i=0;i<uz;i++)
+    {
+    //printf("liste- %i : %s\n",i,grouplist[i]);
+      char *groupname=grouplist[i];
+
+    struct group *grp;
+    struct group *grpnew;
+    grp = getgrnam(groupname);
+    if (grp == NULL) {
+        printf("Failed to get gid\n");
+        return;
+    }
+
+
+    /****************************************************/
+    /// @todo: warning! final state may be inconsistent
+     if(group_del_line(groupname, "/etc/group")!=0)
+    {
+       sstrncpy(o->error, "user_del() can not remove user from /etc/group",
+          USER_ERROR_SIZE);
+       return;
+    }
+
+    /***********************set groupto user add operation***************************/
+    //printf("%s-users %i\n",groupname,sizeof(grp->gr_mem)/sizeof(grp->gr_mem[0]));
+
+    int count=0;
+    bool haveuser=false;
+    for(int j=0;j<300;j++)
+    {
+    if(grp->gr_mem[j]!=NULL){
+        printf("%s\n",grp->gr_mem[j]);
+        if (strcmp (grp->gr_mem[j], username)==0)haveuser=true;
+        count++;
+    }
+    else break;
+    }
+    char *users[]={"xxxxxx",NULL};
+              //=(char **)malloc(count * sizeof(*users) );
+
+    for(int k=0;k<count;k++)
+    {
+        printf("yeni liste oluşturuluyor\n");
+        users[k]=grp->gr_mem[k];
+        // printf("%s\n",users[k]);
+    }
+
+    /****************************************************/
+    if(count==0)
+    {
+        //grp->gr_mem[count]=username;
+        users[0]=username;
+        printf("Liste Sayısı:%i\n",count);
+        printf("İlk Kullanıcı ekleniyor\n");
+    }
+    if(count>0&&haveuser==false)
+    {
+        users[count]=username;
+        //grp->gr_mem[count]=username;
+        printf("çok Kullanıcı ekleniyor\n");
+    }
+
+
+    //  int b=group_add(o,grp->gr_name,users);
+       printf("hata1\n");
+       grp->gr_mem=users;
+      /****************************************************/
+
+   o->error[0]=0;
+      FILE *f;
+
+   f = fopen("/etc/group", "a+");
+   if(!f)
+   {
+      sstrncpy(o->error, "group_add(): cannot open /etc/group",USER_ERROR_SIZE);
+      return;
+   }
+
+   /**************************************************************************/
+  f = fopen("/etc/group", "a+");
+  if(!f)
+  {
+     sstrncpy(o->error, "group_add(): cannot open /etc/group\n",USER_ERROR_SIZE);
+     return;
+  }
+ printf("hata2\n");
+  /* add to group */
+  int st=putgrent(grp, f);
+  if (st == -1)
+  {
+
+     sstrncpy(o->error, "group_add(): putgrent() error\n", USER_ERROR_SIZE);
+     return;
+  }
+  fclose(f);
+ printf("hata3\n");
+
+}
 }
 // }}}
 
@@ -652,8 +695,10 @@ int main() {
     message err;
    // char* cpass = const_cast<char*>(pass.c_str());
    // char* cusername = const_cast<char*>(username.c_str());
-     char *members[] = {"user1", "user2", "user3", NULL};
-    group_add_user(&err,"tehe",members);
+     char *groups[] = {"floppy","audio","video","plugdev","netdev"};
+    // int uz = sizeof(members) / sizeof(members[0]);
+   // group_add_user(&err,"selo",groups,sizeof(groups) / sizeof(groups[0]));
+
 //int a=user_get_new_id(&err,"bb");
 //printf("yeni kullanıcı id: %i",a);
 //user_set_uid(&err,"karahan",5000);
