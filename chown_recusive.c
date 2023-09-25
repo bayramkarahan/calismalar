@@ -6,6 +6,7 @@
 
 int chown_recusive(const char *path,const char *user_name,const char *group_name)
 {
+
 /************************************************************************/
  uid_t          uid;
   gid_t          gid;
@@ -24,6 +25,10 @@ int chown_recusive(const char *path,const char *user_name,const char *group_name
   }
   gid = grp->gr_gid;
 /************************************************************************/
+  if (chown(path, uid, gid) == -1) {
+    printf("chown fail\n");
+}
+/********************************************************************/
     struct dirent *entry;
     DIR *dp;
 
@@ -46,20 +51,26 @@ int chown_recusive(const char *path,const char *user_name,const char *group_name
         strcat (fullpath, "/");
         strcat (fullpath, entry->d_name);
 
-        if (entry->d_type == DT_DIR&&entry->d_name[0]!='.')
+        if (entry->d_type == DT_DIR)
         {
-
-          //  printf("Dizin: %s %i %i\n",fullpath,uid,gid);
-
-            chown_recusive(fullpath,user_name,group_name);
+            if(entry->d_name[0]=='.'&&entry->d_name[1]=='.')continue;
+            if(entry->d_name[0]=='.'&&entry->d_name[1]==NULL)continue;
+           // printf("Dizin: %s %s %i %i\n",entry->d_name,fullpath,uid,gid);
+          /*  if (chown(fullpath, uid, gid) == -1) {
+              printf("chown fail\n");
+          }*/
+          chown_recusive(fullpath,user_name,group_name);
         }
 
-        if (entry->d_type!= DT_DIR&&entry->d_name[0]!='.')
-            //printf("Dosya: %s %i %i\n",fullpath,uid,gid);
+        if (entry->d_type!= DT_DIR)
+        {
+           // printf("Dosya: %s %s %i %i\n",entry->d_name,fullpath,uid,gid);
 
           if (chown(fullpath, uid, gid) == -1) {
       		printf("chown fail\n");
   		}
+
+  	}
     }
 
     closedir(dp);
@@ -96,6 +107,6 @@ void do_chown (const char *file_path,
 }*/
 int main() {
 //chown_recusive(const char *path,const char *user_name,const char *group_name)
-chown_recusive("deneme","abc","karahan");
+chown_recusive("deneme","nova","karahan");
 return 0;
 }

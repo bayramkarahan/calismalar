@@ -425,7 +425,8 @@ void group_add_user(message *o, char *username,char *grouplist[],int uz)
     grp = getgrnam(groupname);
     if (grp == NULL) {
         printf("Failed to get gid\n");
-        return;
+        //return;
+        continue;
     }
 
 
@@ -435,7 +436,8 @@ void group_add_user(message *o, char *username,char *grouplist[],int uz)
     {
        sstrncpy(o->error, "user_del() can not remove user from /etc/group",
           USER_ERROR_SIZE);
-       return;
+       //return;
+       continue;
     }
 
     /***********************set groupto user add operation***************************/
@@ -697,7 +699,7 @@ int main() {
    // char* cusername = const_cast<char*>(username.c_str());
      char *groups[] = {"floppy","audio","video","plugdev","netdev"};
     // int uz = sizeof(members) / sizeof(members[0]);
-   // group_add_user(&err,"selo",groups,sizeof(groups) / sizeof(groups[0]));
+    group_add_user(&err,"karahan",groups,sizeof(groups) / sizeof(groups[0]));
 
 //int a=user_get_new_id(&err,"bb");
 //printf("yeni kullanıcı id: %i",a);

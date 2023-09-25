@@ -21,53 +21,41 @@
  * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
-
 /* <DESC>
- * Copy an email from one IMAP folder to another
+ * simple HTTP POST using the easy interface
  * </DESC>
  */
-
 #include <stdio.h>
 #include <curl/curl.h>
-
-/* This is a simple example showing how to copy a mail from one mailbox folder
- * to another using libcurl's IMAP capabilities.
- *
- * Note that this example requires libcurl 7.30.0 or above.
- */
 
 int main(void)
 {
   CURL *curl;
-  CURLcode res = CURLE_OK;
+  CURLcode res;
 
+  /* In windows, this will init the winsock stuff */
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  /* get a curl handle */
   curl = curl_easy_init();
   if(curl) {
-    /* Set username and password */
-    curl_easy_setopt(curl, CURLOPT_USERNAME, "user");
-    curl_easy_setopt(curl, CURLOPT_PASSWORD, "secret");
+    /* First set the URL that is about to receive our POST. This URL can
+       just as well be an https:// URL if that is what should receive the
+       data. */
+    curl_easy_setopt(curl, CURLOPT_URL, "http://127.0.0.1:8080");
+    /* Now specify the POST data */
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "username=karahan-qr&password=dc3019");
 
-    /* This is source mailbox folder to select */
-    curl_easy_setopt(curl, CURLOPT_URL, "imap://imap.example.com/INBOX");
-
-    /* Set the COPY command specifying the message ID and destination folder */
-    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "COPY 1 FOLDER");
-
-    /* Note that to perform a move operation you will need to perform the copy,
-     * then mark the original mail as Deleted and EXPUNGE or CLOSE. Please see
-     * imap-store.c for more information on deleting messages. */
-
-    /* Perform the custom request */
+    /* Perform the request, res will get the return code */
     res = curl_easy_perform(curl);
-
     /* Check for errors */
     if(res != CURLE_OK)
       fprintf(stderr, "curl_easy_perform() failed: %s\n",
               curl_easy_strerror(res));
 
-    /* Always cleanup */
+    /* always cleanup */
     curl_easy_cleanup(curl);
   }
-
-  return (int)res;
+  curl_global_cleanup();
+  return 0;
 }
