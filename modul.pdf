@@ -1,0 +1,449 @@
+%PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R /F5 6 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Times-Roman /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/BaseFont /ZapfDingbats /Name /F3 /Subtype /Type1 /Type /Font
+>>
+endobj
+5 0 obj
+<<
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F4 /Subtype /Type1 /Type /Font
+>>
+endobj
+6 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F5 /Subtype /Type1 /Type /Font
+>>
+endobj
+7 0 obj
+<<
+/Contents 18 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 17 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+8 0 obj
+<<
+/Contents 19 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 17 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+9 0 obj
+<<
+/Outlines 11 0 R /PageLabels 20 0 R /PageMode /UseNone /Pages 17 0 R /Type /Catalog
+>>
+endobj
+10 0 obj
+<<
+/Author () /CreationDate (D:20230930092559+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20230930092559+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+  /Subject (\(unspecified\)) /Title () /Trapped /False
+>>
+endobj
+11 0 obj
+<<
+/Count 5 /First 12 0 R /Last 16 0 R /Type /Outlines
+>>
+endobj
+12 0 obj
+<<
+/Dest [ 7 0 R /XYZ 57.02362 765.0236 0 ] /Next 13 0 R /Parent 11 0 R /Title (kmod Nedir? Nas\232l Yaz\232l\232r ve Kullan\232l\232r?)
+>>
+endobj
+13 0 obj
+<<
+/Dest [ 7 0 R /XYZ 57.02362 414.8236 0 ] /Next 14 0 R /Parent 11 0 R /Prev 12 0 R /Title (hello.c dosyam\232z)
+>>
+endobj
+14 0 obj
+<<
+/Dest [ 7 0 R /XYZ 57.02362 280.6236 0 ] /Next 15 0 R /Parent 11 0 R /Prev 13 0 R /Title (Makefile dosyam\232z)
+>>
+endobj
+15 0 obj
+<<
+/Dest [ 7 0 R /XYZ 57.02362 133.4236 0 ] /Next 16 0 R /Parent 11 0 R /Prev 14 0 R /Title (mod\374l\374n derlenmesi ve eklenip kald\232r\232lmas\232)
+>>
+endobj
+16 0 obj
+<<
+/Dest [ 8 0 R /XYZ 57.02362 687.0236 0 ] /Parent 11 0 R /Prev 15 0 R /Title (Not:)
+>>
+endobj
+17 0 obj
+<<
+/Count 2 /Kids [ 7 0 R 8 0 R ] /Type /Pages
+>>
+endobj
+18 0 obj
+<<
+/Length 8120
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 57.02362 744.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (kmod Nedir? Nas) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (l Yaz) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (l) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (r ve Kullan) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (l) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (r?) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 702.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 26 Tm /F1 10 Tf 12 TL 1.042577 Tw (Linux \347ekirde) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (i ile donan) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (m aras) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (ndaki haberle) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (meyi sa) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (layan kod par\347alar) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (d) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r. Bu kod par\347alar) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (n) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL T* 0 Tw 3.235835 Tw (kernele ekledi) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (imizde kerneli tekrardan derlememiz gerekmektedir. Her eklenen koddan sonra kernel) Tj T* 0 Tw (derleme, kod \347) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (kartt) Tj /F3 10 Tf 12 TL (nnn) Tj /F1 10 Tf 12 TL (mzda kernel derlemek ciddi bir i) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( y\374k\374 ve karma) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (a yaratacakt) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 672.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.986027 Tw (Bu sorunlar) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (n \347\366z\374m\374 i\347in modul vard) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r. moduller kernele istedi) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (imiz kod parpalar) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (n) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( ekleme ya da) Tj T* 0 Tw (\347) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (kartma yapabiliyoruz. Bu i) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (lemleri yaparken kenel derleme i) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (lemi yapmam) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (za gerek yok.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 654.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Kernele modul y\374kleme kald) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (rma i\347in kmod arac) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( kullan) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (lmaktad) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r. kmaod arac) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (;) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 608.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.941176 .972549 1 rg
+n -6 -6 480.0283 36 re B*
+Q
+q
+.733333 .733333 .733333 rg
+BT 1 0 0 1 0 14 Tm /F4 10 Tf 12 TL  T*  T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 576.8236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL -0.125647 Tw (ln -s kmod /bin/depmod ln -s kmod /bin/insmod ln -s kmod /initrd/bin/lsmod ln -s kmod /bin/modinfo ln -s kmod) Tj T* 0 Tw (/bin/modprobe ln -s kmod /bin/rmmod) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 558.8236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (eklinde sembolik ba) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (larla yeni ara\347lar olu) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (turulmu) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (tur.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 540.8236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 0 0 rg (lsmod :) Tj /F1 10 Tf ( y\374kl\374 modulleri listeler) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 522.8236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 0 0 rg (insmod:) Tj /F1 10 Tf ( tek bir modul y\374kler) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 504.8236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 0 0 rg (rmmod:) Tj /F1 10 Tf ( tek bir modul siler) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 486.8236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 0 0 rg (modinfo:) Tj /F1 10 Tf ( modul hakk) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (nda bilgi al) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (n) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 456.8236 cm
+q
+BT 1 0 0 1 0 14 Tm 1.417122 Tw 12 TL /F5 10 Tf 0 0 0 rg (modprobe:) Tj /F1 10 Tf ( insmod komutunun ayn) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (s) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( fakat daha i) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (levseldir. module ait ba) Tj /F3 10 Tf 12 TL (nn) Tj /F1 10 Tf 12 TL (ml) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( oldu) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (u mod\374lleride) Tj T* 0 Tw (y\374klemektedir. modprobe mod\374l\374 /lib/modules/ dizini alt) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (nda aramaktad) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 426.8236 cm
+q
+BT 1 0 0 1 0 14 Tm .694395 Tw 12 TL /F5 10 Tf 0 0 0 rg (depmod:) Tj /F1 10 Tf ( /lib/modules dizinindeki mod\374llerin listesini g\374nceller. Fakat ba) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (ka bir dizinde ise basedir=konum) Tj T* 0 Tw /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (eklinde belirtmek gerekir. konum dizininde /lib/modules/** ) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (eklinde kals\366rler olmal) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (d) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 393.8236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (hello.c dosyam) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (z) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 348.6236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.941176 .972549 1 rg
+n -6 -6 480.0283 36 re B*
+Q
+q
+.733333 .733333 .733333 rg
+BT 1 0 0 1 0 14 Tm /F4 10 Tf 12 TL  T*  T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 292.6236 cm
+q
+BT 1 0 0 1 0 38 Tm .601391 Tw 12 TL /F1 10 Tf 0 0 0 rg (#include <) Tj (linux/module.h) Tj (> #include <) Tj (linux/kernel.h) Tj (> #include <) Tj (linux/init.h) Tj (> MODULE_DESCRIPTION\("Hello) Tj T* 0 Tw 9.826391 Tw (World examples"\); MODULE_LICENSE\("GPL"\); MODULE_AUTHOR\("Bayram"\); static int __init) Tj T* 0 Tw 2.553196 Tw (hello_init\(void\) { printk\(KERN_INFO "Hello world!n"\); return 0; } static void __exit hello_cleanup\(void\) {) Tj T* 0 Tw (printk\(KERN_INFO "remove module.n"\); } module_init\(hello_init\); module_exit\(hello_cleanup\);) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 259.6236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Makefile dosyam) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (z) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 214.4236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.941176 .972549 1 rg
+n -6 -6 480.0283 36 re B*
+Q
+q
+.733333 .733333 .733333 rg
+BT 1 0 0 1 0 14 Tm /F4 10 Tf 12 TL  T*  T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 194.4236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (obj-m+=my_module.o all:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 188.4236 cm
+Q
+q
+1 0 0 1 57.02362 176.4236 cm
+q
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 0 2 Tm  T* ET
+q
+1 0 0 1 20 0 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (make -C /lib/modules/$\(shell uname -r\)/build M=$\(PWD\) modules) Tj T* ET
+Q
+Q
+q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 176.4236 cm
+Q
+q
+1 0 0 1 57.02362 160.4236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F5 10 Tf 12 TL (clean:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 145.4236 cm
+q
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 0 2 Tm  T* ET
+q
+1 0 0 1 20 0 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (make -C /lib/modules/$\(shell uname -r\)/build M=$\(PWD\) clean) Tj T* ET
+Q
+Q
+q
+Q
+Q
+Q
+q
+1 0 0 1 57.02362 112.4236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (mod\374l\374n derlenmesi ve eklenip kald) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (r) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL (lmas) Tj /F3 17.5 Tf 21 TL (n) Tj /F2 17.5 Tf 21 TL T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 67.22362 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.941176 .972549 1 rg
+n -6 -6 480.0283 36 re B*
+Q
+q
+.733333 .733333 .733333 rg
+BT 1 0 0 1 0 14 Tm /F4 10 Tf 12 TL  T*  T* ET
+Q
+Q
+Q
+Q
+Q
+ 
+endstream
+endobj
+19 0 obj
+<<
+/Length 1446
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 57.02362 753.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (make) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 735.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (insmod my_modul.ko // mod\374l kernele eklendi.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 717.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (lsmod | grep my_modul //mod\374l y\374klendi mi kontrol ediliyor.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 699.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (rmmod my_modul // mod\374l kernelden \347) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (kart) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (l) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (yor.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 666.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Not:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 636.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 4.158031 Tw (dmesg ile log k) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (sm) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (nda eklendi) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (inde Hello Word yaz) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (s) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (n) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL ( ve kald) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (r) Tj /F3 10 Tf 12 TL (n) Tj /F1 10 Tf 12 TL (ld) Tj /F3 10 Tf 12 TL (nnn) Tj /F1 10 Tf 12 TL (nda modul ismini) Tj T* 0 Tw (g\366rebiliriz.) Tj T* ET
+Q
+Q
+ 
+endstream
+endobj
+20 0 obj
+<<
+/Nums [ 0 21 0 R 1 22 0 R ]
+>>
+endobj
+21 0 obj
+<<
+/S /D /St 1
+>>
+endobj
+22 0 obj
+<<
+/S /D /St 2
+>>
+endobj
+xref
+0 23
+0000000000 65535 f 
+0000000073 00000 n 
+0000000144 00000 n 
+0000000251 00000 n 
+0000000360 00000 n 
+0000000443 00000 n 
+0000000548 00000 n 
+0000000660 00000 n 
+0000000865 00000 n 
+0000001070 00000 n 
+0000001175 00000 n 
+0000001433 00000 n 
+0000001507 00000 n 
+0000001663 00000 n 
+0000001796 00000 n 
+0000001930 00000 n 
+0000002101 00000 n 
+0000002206 00000 n 
+0000002272 00000 n 
+0000010444 00000 n 
+0000011942 00000 n 
+0000011992 00000 n 
+0000012026 00000 n 
+trailer
+<<
+/ID 
+[<d98419d995064f06afde12e4f3e2fcf5><d98419d995064f06afde12e4f3e2fcf5>]
+% ReportLab generated PDF document -- digest (http://www.reportlab.com)
+
+/Info 10 0 R
+/Root 9 0 R
+/Size 23
+>>
+startxref
+12060
+%%EOF
