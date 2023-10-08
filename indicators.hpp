@@ -80,8 +80,8 @@ enum class ProgressType { incremental, decremental };
 #   include <io.h>
 #   include <windows.h>
 #endif
-
-
+#include <cstdint>
+using std::uint8_t, std::uint16_t, std::uint64_t;
 namespace termcolor
 {
     // Forward declaration of the `_internal` namespace.

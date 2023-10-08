@@ -10,10 +10,22 @@ static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream) {
     return written;
 } /* write_data */
 
+int progressCallback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
+    // İndirme yüzdesini hesapla
+    double progress = (double)dlnow / (double)dltotal * 100.0;
+    
+    // İndirme yüzdesini ekrana yazdır
+    printf("İndirme Yüzdesi: %.2f%%\n", progress);
+    
+    return 0;
+}
+
 bool DownloadFile() {
     bool retval = false;
-    static const char FileURL[] ="https://github.com/bayramkarahan/okularpdfreaderplugin/raw/master/okularpdfreader.deb";
-    static char TargetCURL[] = "test.jpg";
+   // static const char FileURL[] ="https://github.com/bayramkarahan/okularpdfreaderplugin/raw/master/okularpdfreader.deb";
+     static const char FileURL[] ="https://download.onlyoffice.com/install/desktop/editors/linux/onlyoffice-desktopeditors_amd64.deb";
+ 
+    static char TargetCURL[] = "test.deb";
 
     // Download the file using curl library into DownloadCURL folder
     if(CURL* curl = curl_easy_init()) {
@@ -25,6 +37,10 @@ bool DownloadFile() {
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // follow redirects
             curl_easy_setopt(curl, CURLOPT_HTTPPROXYTUNNEL, 1L); // corp. proxies etc.
 
+
+// İlerleme işlevini ayarla
+curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progressCallback);
+curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
             /* Perform the request, res will get the return code */
             CURLcode res = curl_easy_perform(curl);
             if(!res) retval = true;
