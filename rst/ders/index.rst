@@ -1,0 +1,6 @@
+Sistem
+======
+.. toctree::
+	:glob:
+
+	*/index

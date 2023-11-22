@@ -3,20 +3,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
- 
+#include<iostream>
 #include <curl/curl.h>
 static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream) {
     size_t written = fwrite(ptr, size, nmemb, static_cast<FILE*>(stream));
     return written;
 } /* write_data */
 
-int progressCallback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
+/*int progressCallback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
     // İndirme yüzdesini hesapla
     double progress = (double)dlnow / (double)dltotal * 100.0;
-    
+     // İndirme yüzdesini ekrana yazdır
+   
     // İndirme yüzdesini ekrana yazdır
-    printf("İndirme Yüzdesi: %.2f%%\n", progress);
-    
+   // printf("İndirme Yüzdesi: %.2f%%\n", progress);
+     printf("İndirme Yüzdesi: %i %i %i %i %.2f%\n",dlnow,dltotal,ultotal ,ulnow,progress);
+ 
+    return 0;
+}*/
+int progressCallback(void* clientp, double dltotal, double dlnow, double ultotal, double ulnow) {
+int progress = dlnow / dltotal*100;
+int deger=(int)progress;
+    // İlerleme bilgilerini burada işleyebilirsiniz
+    //std::cout << "İndirilen: " << dlnow << " / " << dltotal<<"--"<<ultotal<<"--"<<ulnow << std::endl;
+    printf("indir:%i\r", progress);
     return 0;
 }
 
