@@ -1,0 +1,27 @@
+version="5.2.21"
+name="bash"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://ftp.gnu.org/pub/gnu/bash/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ \
+        --libdir=/lib \
+        --bindir=/bin \
+        --with-curses \
+        --enable-readline \
+        --without-bash-malloc
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+

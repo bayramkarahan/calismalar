@@ -1,0 +1,18 @@
+version="2.38"
+mkdir -p $HOME/distro
+cd $HOME/distro
+
+wget https://ftp.gnu.org/gnu/libc/glibc-${version}.tar.gz
+
+tar -xvf glibc-${version}.tar.gz
+
+mkdir build-glibc-${version}
+
+cd build-glibc-${version}
+
+../glibc-${version}/configure --prefix=/ --disable-werror
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+

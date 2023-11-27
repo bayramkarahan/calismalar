@@ -1,0 +1,21 @@
+version="1.36.1"
+name="busybox"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://busybox.net/downloads/${name}-${version}.tar.bz2
+
+tar -xvf ${name}-${version}.tar.bz2
+cd ${name}-${version}
+
+make defconfig
+sed -i "s|.*CONFIG_STATIC_LIBGCC .*|CONFIG_STATIC_LIBGCC=y|" .config
+sed -i "s|.*CONFIG_STATIC .*|CONFIG_STATIC=y|" .config
+
+make 
+mkdir -p $HOME/rootfs/bin
+cp busybox $HOME/rootfs/bin
+

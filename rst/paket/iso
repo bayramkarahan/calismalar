@@ -1,0 +1,119 @@
+#!/bin/bash
+rm -rf $HOME/distro/iso
+rm -rf $HOME/distro/initrd
+
+#*****************glibc hazırlanmalı************************
+cd $HOME/distro/build-glibc-2.38
+make install DESTDIR=$HOME/distro/initrd
+cd $HOME/distro/initrd/
+ln -s lib lib64
+
+#***************************bash**********************
+cd $HOME/distro/build-readline-8.1
+make install DESTDIR=$HOME/distro/initrd
+
+cd $HOME/distro/build-ncurses-6.4
+make install DESTDIR=$HOME/distro/initrd
+cd $HOME/distro/initrd/lib
+ln -s libncurses.so.6 libtinfo.so.6
+
+cd $HOME/distro/build-bash-5.2.21
+make install DESTDIR=$HOME/distro/initrd
+
+#*****************busybox hazırlanmalı************************
+cd $HOME/distro/busybox-1.36.1
+cp ./busybox $HOME/distro/initrd/bin/busybox #sistemden kopyalandı..
+
+#*****************kmod hazırlanacak***************************
+cd $HOME/distro/build-kmod-31
+make install DESTDIR=$HOME/distro/initrd
+
+cd $HOME/distro/initrd/sbin
+ln -s kmod sbin/depmod
+ln -s kmod insmod
+ln -s kmod lsmod
+ln -s kmod modinfo
+ln -s kmod modprobe
+ln -s kmod rmmod
+
+#****************modul yukleme*************************
+cd $HOME/distro/linux-6.6.2
+#make bzImage modules
+INSTALL_MOD_PATH="$HOME/distro/initrd" make modules_install
+#/sbin/depmod --all --basedir=initrd #modul indeksi oluşturluyor
+#***************************udevd-udevadm**********************
+cd $HOME/distro/build-eudev-3.2.14
+make install DESTDIR=$HOME/distro/initrd
+
+#***************************util-linux**********************
+cd $HOME/distro/build-util-linux-2.39
+make install DESTDIR=$HOME/distro/initrd
+
+#*************************base-file kopyalanıyor*************************
+cp $HOME/distro/base-files-0/* -rf $HOME/distro/initrd
+#**************************init dosyası oluşturuluyor***********************************
+
+cat >  $HOME/distro/initrd/init << EOF
+#!/bin/busybox ash
+/bin/busybox mkdir -p /bin
+/bin/busybox --install -s /bin
+export PATH=/bin
+echo "test"
+
+mkdir dev proc sys
+mount -t devtmpfs none /dev
+mount -t proc none /proc
+mount -t sysfs none /sys
+echo "Welcome to my Linux!"
+
+#/sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
+echo "deneme"
+
+#/bin/busybox ash
+/bin/bash
+
+EOF
+
+
+
+chmod +x $HOME/distro/initrd/init 
+cd $HOME/distro/initrd
+find |cpio -H newc -o >../initrd.img
+
+
+
+#************************iso *********************************
+mkdir -p $HOME/distro/iso
+mkdir -p $HOME/distro/iso/boot
+mkdir -p $HOME/distro/iso/boot/grub
+mkdir -p $HOME/distro/iso/live || true
+
+#iso dizinine vmlinuz ve initrd.img dosyamız kopyalanıyor
+cp $HOME/distro/linux-6.6.2/arch/x86/boot/bzImage $HOME/distro/iso/boot/vmlinuz 
+mv $HOME/distro/initrd.img $HOME/distro/iso/boot/initrd.img #oluşturduğumuz **initrd.img** dosyamızı taşıyoruz.
+
+#squashfs dosyası oluşturuluyor iso dzinine kopyalanıyor
+cd $HOME/distro/
+mksquashfs initrd $HOME/distro/filesystem.squashfs -comp xz -wildcards
+mv $HOME/distro/filesystem.squashfs $HOME/distro/iso/live/filesystem.squashfs
+
+#grub menüsü oluşturuluyor..
+cat > $HOME/distro/iso/boot/grub/grub.cfg << EOF
+linux /boot/vmlinuz
+initrd /boot/initrd.img
+boot boot=live
+EOF
+
+
+#echo 'menuentry "Live GNU/Linux 64-bit" --class liveiso {' > $HOME/distro/iso/boot/grub/grub.cfg
+#echo '    linux /boot/vmlinuz boot=live quiet live-config --' >> liveiso/boot/grub/grub.cfg
+#echo '    initrd /boot/initrd.img' >> $HOME/distro/iso/boot/grub/grub.cfg
+#echo '}' >> $HOME/distro/iso/boot/grub/grub.cfg
+
+grub-mkrescue $HOME/distro/iso/ -o $HOME/distro/distro.iso
+#qemu-system-x86_64 -cdrom $HOME/distro/distro.iso -m 1G
+
+
+
+
+

@@ -1,6 +1,0 @@
-Sistem
-======
-.. toctree::
-	:glob:
-
-	*/index

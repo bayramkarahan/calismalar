@@ -1,0 +1,22 @@
+version="2.38"
+name="glibc"
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://ftp.gnu.org/gnu/libc/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ --disable-werror
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+cd $HOME/rootfs/
+ln -s lib lib64

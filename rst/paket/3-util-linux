@@ -1,0 +1,44 @@
+version="2.39"
+name="util-linux"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.39/${name}-${version}.tar.xz
+tar -xvf ${name}-${version}.tar.xz
+
+#cd $HOME/distro/${name}-${version}
+
+#sed -i 's/\(link_all_deplibs\)=no/\1=unknown/'
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ \
+	--libdir=/lib \
+	--bindir=/bin \
+	--enable-shared \
+	--disable-su \
+	--disable-runuser \
+	--disable-chfn-chsh \
+	--disable-login \
+	--disable-sulogin \
+	--disable-makeinstall-chown \
+	--disable-makeinstall-setuid \
+	--disable-pylibmount \
+	--disable-raw \
+	--without-systemd \
+	--without-libuser \
+	--without-utempter \
+	--without-econf
+
+#	--disable-libmount \
+#	--disable-libblkid 
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+

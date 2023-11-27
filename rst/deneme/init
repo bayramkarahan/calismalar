@@ -1,0 +1,5 @@
+#!/busybox ash
+/busybox mkdir -p /bin
+/busybox --install -s /bin
+export PATH=/bin
+exec /bin/ash

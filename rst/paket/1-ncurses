@@ -1,0 +1,24 @@
+version="6.4"
+name="ncurses"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://ftp.gnu.org/pub/gnu/ncurses/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ --with-shared --disable-tic-depends --with-versioned-syms
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+cd $HOME/rootfs/lib
+ln -s libncurses.so.6 libtinfo.so.6

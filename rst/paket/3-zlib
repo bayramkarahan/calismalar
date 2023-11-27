@@ -1,0 +1,22 @@
+
+version="1.3"
+name="zlib"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://zlib.net/current/${name}.tar.gz
+tar -xvf ${name}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+

@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://etahta.gitlab.io/sayfa/sitemap.xml

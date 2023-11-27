@@ -1,0 +1,100 @@
+#!/bin/bash
+rm -rf $HOME/distro/iso
+rm -rf $HOME/distro/initrd
+
+#*****************glibc hazırlanmalı************************
+cd $HOME/distro/build-glibc-2.38
+make install DESTDIR=$HOME/distro/initrd
+
+
+#mkdir -p $HOME/distro/initrd
+#mkdir -p $HOME/distro/initrd/bin/
+#mkdir -p $HOME/distro/initrd/lib/
+ln -s $HOME/distro/initrd/lib $HOME/distro/initrd/lib64
+#mkdir -p $HOME/distro/initrd/lib/modules/
+#mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)
+#mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)/moduller
+#mkdir -p $HOME/distro/initrd/etc/udev/
+#mkdir -p $HOME/distro/initrd/lib/udev/
+#***************************bash**********************
+cd $HOME/distro/build-readline-8.1
+make install DESTDIR=$HOME/distro/initrd
+
+cd $HOME/distro/build-ncurses-6.4
+make install DESTDIR=$HOME/distro/initrd
+
+cd $HOME/distro/build-bash-5.2.21
+make install DESTDIR=$HOME/distro/initrd
+
+#*****************busybox hazırlanmalı************************
+#cp $HOME/distro/rootfs/busybox $HOME/distro/initrd/bin/busybox #sistemden kopyalandı..
+
+#*****************kmod hazırlanacak***************************
+cd $HOME/distro/build-kmod-31
+make install DESTDIR=$HOME/distro/initrd
+
+#cd $HOME/distro/initrd/sbin
+
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/depmod
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/insmod
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/lsmod
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/modinfo
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/modprobe
+ln -s $HOME/distro/initrd/kmod $HOME/distro/initrd/sbin/rmmod
+
+#****************modul yukleme*************************
+cd $HOME/linux-6.6.2
+#make bzImage modules
+INSTALL_MOD_PATH="$HOME/distro/initrd" make modules_install
+#/sbin/depmod --all --basedir=initrd #modul indeksi oluşturluyor
+#***************************udevd-udevadm**********************
+cd $HOME/distro/build-eudev-3.2.14
+make install DESTDIR=$HOME/distro/initrd
+
+#***************************util-linux**********************
+cd $HOME/distro/build-util-linux-2.39
+make install DESTDIR=$HOME/distro/initrd
+
+
+#**************************init dosyası oluşturuluyor***********************************
+cat >  $HOME/distro/initrd/init << EOF
+#!/bin/busybox ash
+/bin/busybox mkdir -p /bin
+/bin/busybox --install -s /bin
+export PATH=/bin
+echo "test"
+
+#/sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
+echo "deneme"
+
+#/bin/busybox ash
+/bin/bash
+
+EOF
+
+
+
+chmod +x $HOME/distro/initrd/init 
+cd $HOME/distro/initrd
+find |cpio -H newc -o >../initrd.img
+cd ..
+
+#************************iso *********************************
+mkdir -p $HOME/distro/iso
+mkdir -p $HOME/distro/iso/boot
+mkdir -p $HOME/distro/iso/boot/grub
+
+cp $HOME/linux-6.6.2/arch/x86/boot/bzImage $HOME/distro/iso/boot/vmlinuz  #sistemde kullandığım kerneli kopyaladım istenirde kernel derlenebilir.
+mv $HOME/distro/initrd.img $HOME/distro/iso/boot/initrd.img #daha önce oluşturduğumuz **initrd.img** dosyamızı taşıyoruz.
+
+#grub menüsü oluşturuluyor..
+
+cat > $HOME/distro/iso/boot/grub/grub.cfg << EOF
+linux /boot/vmlinuz
+initrd /boot/initrd.img
+boot
+EOF
+grub-mkrescue $HOME/distro/iso/ -o $HOME/distro/distro.iso
+#qemu-system-x86_64 -cdrom $HOME/distro/distro.iso -m 1G
+
+
