@@ -1,0 +1,8 @@
+version="0"
+name="live-boot"
+mkdir -p $HOME/distro
+cd $HOME/distro
+git clone https://github.com/bayramkarahan/live-boot.git
+
+cd ${name}
+make install DESRTDIR=$HOME/rootfs

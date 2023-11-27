@@ -49,29 +49,72 @@ make install DESTDIR=$HOME/distro/initrd
 cd $HOME/distro/build-util-linux-2.39
 make install DESTDIR=$HOME/distro/initrd
 
+#***************************nano**********************
+cd $HOME/distro/build-nano-7.2
+make install DESTDIR=$HOME/distro/initrd
+cd $HOME/distro/initrd
+echo "INPUT(-lncursesw)" > $LFS/lib/libncurses.so
 #*************************base-file kopyalanıyor*************************
 cp $HOME/distro/base-files-0/* -rf $HOME/distro/initrd
+
+#*************************live-boot*************************
+cd $HOME/distro/live-boot
+make install DESTDIR=$HOME/distro/initrd
+#********************udhcpc**************************
+mkdir -p $HOME/distro/initrd/usr
+mkdir -p $HOME/distro/initrd/usr/share
+mkdir -p $HOME/distro/initrd/usr/share/udhcpc
+
+cat >  $HOME/distro/initrd/usr/share/udhcpc/udhcpc.sh << EOF
+#!/bin/sh
+ip addr add $ip/$mask dev $interface
+if [ "$router" ] ; then
+  ip route add default via $router dev $interface
+fi
+EOF
 #**************************init dosyası oluşturuluyor***********************************
 
 cat >  $HOME/distro/initrd/init << EOF
 #!/bin/busybox ash
 /bin/busybox mkdir -p /bin
 /bin/busybox --install -s /bin
-export PATH=/bin
-echo "test"
+#**********************************
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
-mkdir dev proc sys
-mount -t devtmpfs none /dev
-mount -t proc none /proc
-mount -t sysfs none /sys
-echo "Welcome to my Linux!"
+[ -d /dev ]  || mkdir -m 0755 /dev
+[ -d /root ] || mkdir -m 0700 /root
+[ -d /sys ]  || mkdir /sys
+[ -d /proc ] || mkdir /proc
 
-#/sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
+mkdir -p /tmp /run
+
+#devtmpfs does not get automounted for initramfs
+mount -t devtmpfs devtmpfs /dev
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t tmpfs tmpfs /tmp
+touch /dev/null
+[ -d /dev/modules ] || mkdir /dev/modules
+
+#ethernet ip alması
+ip link set eth0 up
+udhcpc -i eth0 -s udhcpc.sh
+
+sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
 echo "deneme"
 
 #/bin/busybox ash
 /bin/bash
 
+EOF
+
+cat >  $HOME/distro/initrd/runudev << EOF
+#!/bin/sh
+
+udevd --daemon --resolve-names=never #modprobe yerine kullanılıyor
+udevadm trigger --type=subsystems --action=add
+udevadm trigger --type=devices --action=add
+udevadm settle || true
 EOF
 
 
@@ -104,8 +147,7 @@ initrd /boot/initrd.img
 boot boot=live
 EOF
 
-
-#echo 'menuentry "Live GNU/Linux 64-bit" --class liveiso {' > $HOME/distro/iso/boot/grub/grub.cfg
+#echo 'menuentry "Live GNU/Linux 64-bit" --class live {' > $HOME/distro/iso/boot/grub/grub.cfg
 #echo '    linux /boot/vmlinuz boot=live quiet live-config --' >> liveiso/boot/grub/grub.cfg
 #echo '    initrd /boot/initrd.img' >> $HOME/distro/iso/boot/grub/grub.cfg
 #echo '}' >> $HOME/distro/iso/boot/grub/grub.cfg

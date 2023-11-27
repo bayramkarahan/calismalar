@@ -14,8 +14,21 @@ mkdir build-${name}-${version}
 
 cd build-${name}-${version}
 
+#../${name}-${version}/configure --prefix=/ --with-shared --disable-tic-depends --enable-widec --with-versioned-syms
 ../${name}-${version}/configure --prefix=/ --with-shared --disable-tic-depends --with-versioned-syms
 
+#../${name}-${version}/configure --prefix=/               \
+ #           --host=$LFS_TGT              \
+  #          --build=$(./config.guess)    \
+   #         --mandir=/usr/share/man      \
+    #        --with-manpage-format=normal \
+     #       --with-shared                \
+      #      --without-normal             \
+       #     --with-cxx-shared            \
+        #    --without-debug              \
+         #   --without-ada                \
+          #  --disable-stripping          \
+           # --enable-widec
 make 
 
 make install DESTDIR=$HOME/rootfs
