@@ -37,10 +37,36 @@ ln -s kmod modprobe
 ln -s kmod rmmod
 
 #****************modul yukleme*************************
-cd $HOME/distro/linux-6.6.2
+#cd $HOME/distro/linux-6.6.2
 #make bzImage modules
-INSTALL_MOD_PATH="$HOME/distro/initrd" make modules_install
+#INSTALL_MOD_PATH="$HOME/distro/initrd" make modules_install
 #/sbin/depmod --all --basedir=initrd #modul indeksi oluşturluyor
+mkdir -p $HOME/distro/initrd/lib/modules/
+mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)
+mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)/moduller
+for directory in {crypto,fs,lib} \
+    drivers/{block,ata,md,firewire} \
+    drivers/{scsi,message,pcmcia,virtio} \
+    drivers/usb/{host,storage}; 
+    	do
+    	#echo ${directory}
+    	#    misc \
+   find /lib/modules/$(uname -r)/kernel/${directory}/ -type f \
+        -exec install {} $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ \;
+	done
+#cp /lib/modules/$(uname -r)/kernel/* -rf $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ #sistemden kopyalandı..
+
+/sbin/depmod --all --basedir=$HOME/distro/initrd #modul indeksi oluşturluyor
+#*****************kurallar yüklenecek*************************
+mkdir -p $HOME/distro/initrd/etc/udev/
+mkdir -p $HOME/distro/initrd/lib/udev/
+cp /etc/udev/rules.d -rf  $HOME/distro/initrd/etc/udev/
+cp /lib/udev/rules.d -rf  $HOME/distro/initrd/lib/udev/
+#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-drivers.rules
+#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-debian-compat.rules
+#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-net-setup-link.rules
+#rm -rf $HOME/distro/initrd/lib/udev/rules.d/90-nm-thunderbolt.rules
+#rm -rf $HOME/distro/initrd/lib/udev/rules.d/73-seat-late.rules
 #***************************udevd-udevadm**********************
 cd $HOME/distro/build-eudev-3.2.14
 make install DESTDIR=$HOME/distro/initrd
@@ -48,7 +74,7 @@ make install DESTDIR=$HOME/distro/initrd
 #***************************util-linux**********************
 cd $HOME/distro/build-util-linux-2.39
 make install DESTDIR=$HOME/distro/initrd
-
+cp .libs/* -rf $HOME/distro/initrd/lib/
 #***************************nano**********************
 cd $HOME/distro/build-nano-7.2
 make install DESTDIR=$HOME/distro/initrd
@@ -85,22 +111,30 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 [ -d /root ] || mkdir -m 0700 /root
 [ -d /sys ]  || mkdir /sys
 [ -d /proc ] || mkdir /proc
-
 mkdir -p /tmp /run
+touch /dev/null
 
-#devtmpfs does not get automounted for initramfs
+# devtmpfs does not get automounted for initramfs
 mount -t devtmpfs devtmpfs /dev
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /tmp
-touch /dev/null
-[ -d /dev/modules ] || mkdir /dev/modules
+
+#udevd --daemon --resolve-names=never #modprobe yerine kullanılıyor
+#udevadm trigger --type=subsystems --action=add
+#udevadm trigger --type=devices --action=add
+#udevadm settle || true
 
 #ethernet ip alması
-ip link set eth0 up
-udhcpc -i eth0 -s udhcpc.sh
-
-sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
+#ip link set eth0 up
+#udhcpc -i eth0 -s udhcpc.sh
+#disk işlemleri
+#echo "Disk İşlemleri......."
+#modprobe ext4
+#mkdir -p disk
+#diski bağlayalım
+#mount /dev/sda1 disk
+#sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
 echo "deneme"
 
 #/bin/busybox ash
@@ -132,7 +166,8 @@ mkdir -p $HOME/distro/iso/boot/grub
 mkdir -p $HOME/distro/iso/live || true
 
 #iso dizinine vmlinuz ve initrd.img dosyamız kopyalanıyor
-cp $HOME/distro/linux-6.6.2/arch/x86/boot/bzImage $HOME/distro/iso/boot/vmlinuz 
+#cp $HOME/distro/linux-6.6.2/arch/x86/boot/bzImage $HOME/distro/iso/boot/vmlinuz 
+cp /boot/vmlinuz-$(uname -r) $HOME/distro/iso/boot/vmlinuz  #sistemde kullandığım kerneli kopyaladım istenirde kernel derlenebilir.
 mv $HOME/distro/initrd.img $HOME/distro/iso/boot/initrd.img #oluşturduğumuz **initrd.img** dosyamızı taşıyoruz.
 
 #squashfs dosyası oluşturuluyor iso dzinine kopyalanıyor

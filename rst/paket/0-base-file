@@ -11,6 +11,6 @@ cd ${name}-${version}
 mkdir -p run
 mkdir -p run/udev
 mkdir -p etc
-mkdir -p etc/groups
+cp /etc/group ./etc/
 
 cp $HOME/distro/${name}-${version}/* -rf $HOME/rootfs
