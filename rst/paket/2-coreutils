@@ -1,0 +1,33 @@
+version="9.4"
+name="coreutils"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+
+wget https://ftp.gnu.org/gnu/coreutils/${name}-${version}.tar.xz
+
+tar -xvf ${name}-${version}.tar.xz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ \
+        --libdir=/lib \
+        --libexecdir=/usr/libexec \
+        --enable-largefile \
+        --disable-selinux \
+        --enable-single-binary=symlinks \
+        --enable-no-install-program=groups,hostname,kill,uptime \
+        $(use_opt openssl --with-openssl --without-openssl)
+
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+
+

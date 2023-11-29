@@ -44,17 +44,17 @@ ln -s kmod rmmod
 mkdir -p $HOME/distro/initrd/lib/modules/
 mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)
 mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)/moduller
-for directory in {crypto,fs,lib} \
-    drivers/{block,ata,md,firewire} \
-    drivers/{scsi,message,pcmcia,virtio} \
-    drivers/usb/{host,storage}; 
-    	do
-    	#echo ${directory}
+#for directory in {crypto,fs,lib} \
+#    drivers/{block,ata,md,firewire} \
+#    drivers/{scsi,message,pcmcia,virtio} \
+#    drivers/usb/{host,storage}; 
+#    	do
+#    	#echo ${directory}
     	#    misc \
-   find /lib/modules/$(uname -r)/kernel/${directory}/ -type f \
-        -exec install {} $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ \;
-	done
-#cp /lib/modules/$(uname -r)/kernel/* -rf $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ #sistemden kopyalandı..
+#   find /lib/modules/$(uname -r)/kernel/${directory}/ -type f \
+#        -exec install {} $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ \;
+#	done
+cp /lib/modules/$(uname -r)/kernel/* -rf $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ #sistemden kopyalandı..
 
 /sbin/depmod --all --basedir=$HOME/distro/initrd #modul indeksi oluşturluyor
 #*****************kurallar yüklenecek*************************
@@ -80,12 +80,20 @@ cd $HOME/distro/build-nano-7.2
 make install DESTDIR=$HOME/distro/initrd
 cd $HOME/distro/initrd
 echo "INPUT(-lncursesw)" > $LFS/lib/libncurses.so
+#******************libarchive**********************
+cd $HOME/distro/build-libarchive-3.7.2
+make install DESTDIR=$HOME/distro/initrd
+
+#******************libcapng**********************
+cd $HOME/distro/build-libcap-ng-0.8.3
+make install DESTDIR=$HOME/distro/initrd
+
 #*************************base-file kopyalanıyor*************************
 cp $HOME/distro/base-files-0/* -rf $HOME/distro/initrd
 
 #*************************live-boot*************************
-cd $HOME/distro/live-boot
-make install DESTDIR=$HOME/distro/initrd
+#cd $HOME/distro/live-boot
+#make install DESTDIR=$HOME/distro/initrd
 #********************udhcpc**************************
 mkdir -p $HOME/distro/initrd/usr
 mkdir -p $HOME/distro/initrd/usr/share
@@ -131,8 +139,9 @@ mount -t tmpfs tmpfs /tmp
 #disk işlemleri
 #echo "Disk İşlemleri......."
 #modprobe ext4
-#mkdir -p disk
+mkdir -p disk
 #diski bağlayalım
+
 #mount /dev/sda1 disk
 #sbin/depmod --all --basedir=/ #modul indeksi oluşturluyor
 echo "deneme"

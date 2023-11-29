@@ -1,0 +1,37 @@
+version="2.69"
+name="libcap"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/${name}-${version}.tar.xz
+
+
+tar -xvf ${name}-${version}.tar.xz
+
+mkdir build-${name}-${version}
+
+#cd build-${name}-${version}
+
+#../${name}-${version}/configure --prefix=/
+
+
+cd ${name}-${version}
+cap_opts=(
+    SUDO=""
+    prefix=/
+    KERNEL_HEADERS=/usr/include
+    lib=lib64
+    RAISE_SETFCAP=no
+    $(use_opt pam PAM_CAP=yes PAM_CAP=no)
+)
+#make 
+    make ${cap_opts[@]} DYNAMIC=yes
+    make ${cap_opts[@]} DYNAMIC=no
+
+make install DESTDIR=$HOME/rootfs
+
+
+

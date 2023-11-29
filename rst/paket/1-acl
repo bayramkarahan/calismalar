@@ -1,0 +1,24 @@
+version='2.3.1'
+name="acl"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://download.savannah.nongnu.org/releases/acl/${name}-${version}.tar.xz
+
+tar -xvf ${name}-${version}.tar.xz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ --libdir=/lib
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+
+

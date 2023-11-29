@@ -1,0 +1,25 @@
+version="2.5.1"
+name="attr"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://mirror.rabisu.com/savannah-nongnu/attr/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/ \
+        --sysconfdir=/etc \
+        --libdir=/lib
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+
+

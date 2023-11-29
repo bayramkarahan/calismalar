@@ -1,0 +1,27 @@
+version="6.3.0"
+name="gmp"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+wget https://gmplib.org/download/gmp/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure  --prefix=/ \
+	--libdir=/lib\
+	$(use_opt cxx --enable-cxx --disable-cxx) \
+	--enable-fat
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+
+
