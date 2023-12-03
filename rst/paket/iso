@@ -44,12 +44,13 @@ ln -s kmod rmmod
 mkdir -p $HOME/distro/initrd/lib/modules/
 mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)
 mkdir -p $HOME/distro/initrd/lib/modules/$(uname -r)/moduller
+
 #for directory in {crypto,fs,lib} \
-#    drivers/{block,ata,md,firewire} \
+ #   drivers/{block,ata,md,firewire,ahci,sd} \
 #    drivers/{scsi,message,pcmcia,virtio} \
 #    drivers/usb/{host,storage}; 
 #    	do
-#    	#echo ${directory}
+    	#echo ${directory}
     	#    misc \
 #   find /lib/modules/$(uname -r)/kernel/${directory}/ -type f \
 #        -exec install {} $HOME/distro/initrd/lib/modules/$(uname -r)/moduller/ \;
@@ -62,11 +63,11 @@ mkdir -p $HOME/distro/initrd/etc/udev/
 mkdir -p $HOME/distro/initrd/lib/udev/
 cp /etc/udev/rules.d -rf  $HOME/distro/initrd/etc/udev/
 cp /lib/udev/rules.d -rf  $HOME/distro/initrd/lib/udev/
-#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-drivers.rules
-#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-debian-compat.rules
-#rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-net-setup-link.rules
-#rm -rf $HOME/distro/initrd/lib/udev/rules.d/90-nm-thunderbolt.rules
-#rm -rf $HOME/distro/initrd/lib/udev/rules.d/73-seat-late.rules
+rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-drivers.rules
+rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-debian-compat.rules
+rm -rf $HOME/distro/initrd/lib/udev/rules.d/80-net-setup-link.rules
+rm -rf $HOME/distro/initrd/lib/udev/rules.d/90-nm-thunderbolt.rules
+rm -rf $HOME/distro/initrd/lib/udev/rules.d/73-seat-late.rules
 #***************************udevd-udevadm**********************
 cd $HOME/distro/build-eudev-3.2.14
 make install DESTDIR=$HOME/distro/initrd
@@ -113,7 +114,7 @@ cat >  $HOME/distro/initrd/init << EOF
 /bin/busybox mkdir -p /bin
 /bin/busybox --install -s /bin
 #**********************************
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 
 [ -d /dev ]  || mkdir -m 0755 /dev
 [ -d /root ] || mkdir -m 0700 /root

@@ -17,14 +17,12 @@ cd build-${name}-${version}
             --bindir=/sbin          \
             --sbindir=/sbin         \
             --libdir=/lib       \
-            --sysconfdir=/etc       \
-            --libexecdir=/lib       \
-            --with-rootprefix=      \
-            --with-rootlibdir=/lib  \
             --disable-manpages       \
             --disable-static \
             --disable-selinux \
-	    --enable-blkid
+	    --enable-blkid \
+	    --enable-modules \
+	    --enable-kmod
 make 
 
 make install DESTDIR=$HOME/rootfs
