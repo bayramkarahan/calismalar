@@ -1,0 +1,29 @@
+version="kernel"
+name="v1.5.5"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+
+
+wget https://github.com/facebook/zstd/archive/refs/tags/${name}-${version}.tar.gz
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+#../${name}-${version}/configure --prefix=/                          \
+#            --disable-static                        \
+#            --with-openssl                          \
+#            --enable-threaded-resolver              \
+#            --with-ca-path=/etc/ssl/certs
+
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+cp $HOME/rootfs/usr/local/* -rf $HOME/rootfs/
+

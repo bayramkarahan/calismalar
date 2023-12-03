@@ -1,0 +1,30 @@
+version="8.4.0"
+name="curl"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+
+wget https://curl.se/download/${name}-${version}.tar.xz
+tar -xvf ${name}-${version}.tar.xz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/configure --prefix=/                          \
+            --disable-static                        \
+            --with-openssl                          \
+            --enable-threaded-resolver              \
+            --with-ca-path=/etc/ssl/certs
+
+
+
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+

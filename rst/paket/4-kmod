@@ -14,7 +14,7 @@ mkdir build-${name}-${version}
 
 cd build-${name}-${version}
 
-../${name}-${version}/./configure --prefix=/ \
+../${name}-${version}/configure --prefix=/ \
         --libdir=/lib/ \
         --bindir=/sbin
 

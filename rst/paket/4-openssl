@@ -1,0 +1,32 @@
+version="3.2.0"
+name="openssl"
+
+mkdir -p $HOME/distro
+cd $HOME/distro
+rm -rf ${name}-${version}
+rm -rf build-${name}-${version}
+
+
+
+wget https://www.openssl.org/source/${name}-${version}.tar.gz
+
+tar -xvf ${name}-${version}.tar.gz
+
+mkdir build-${name}-${version}
+
+cd build-${name}-${version}
+
+../${name}-${version}/config --prefix=/  \
+         --openssldir=/etc/ssl \
+         --libdir=lib          \
+         shared                \
+         zlib-dynamic
+
+
+
+
+make 
+
+make install DESTDIR=$HOME/rootfs
+
+
