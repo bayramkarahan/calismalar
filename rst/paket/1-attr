@@ -16,7 +16,8 @@ cd build-${name}-${version}
 
 ../${name}-${version}/configure --prefix=/ \
         --sysconfdir=/etc \
-        --libdir=/lib
+        --libdir=/lib \
+        --disable-selinux
 make 
 
 make install DESTDIR=$HOME/rootfs

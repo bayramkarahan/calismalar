@@ -11,10 +11,10 @@ rm -rf build-${name}-${version}
 wget https://github.com/facebook/zstd/archive/refs/tags/${name}-${version}.tar.gz
 tar -xvf ${name}-${version}.tar.gz
 
-mkdir build-${name}-${version}
+#mkdir build-${name}-${version}
 
-cd build-${name}-${version}
-
+#cd build-${name}-${version}
+cd zstd-1.5.5-kernel
 #../${name}-${version}/configure --prefix=/                          \
 #            --disable-static                        \
 #            --with-openssl                          \
